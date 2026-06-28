@@ -1,90 +1,104 @@
-<!DOCTYPE html>
+<<!DOCTYPE html>
 <html lang="th">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LipCoach AR</title>
-  
+  <title>LipCoach AR - AI Powered</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  
   <style>
-    body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-    .pb-safe { padding-bottom: env(safe-area-inset-bottom); }
-    .icon { display: inline-block; width: 24px; height: 24px; stroke-width: 2; stroke: currentColor; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+    body { font-family: sans-serif; }
+    .page { display: none; }
+    .page.active { display: block; }
   </style>
 </head>
 <body class="bg-slate-100 flex justify-center items-center min-h-screen">
 
-  <div class="w-full max-w-md h-[100vh] sm:h-[90vh] bg-white sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col relative" id="app-container">
+  <div class="w-full max-w-md h-[90vh] bg-white rounded-3xl shadow-2xl overflow-hidden flex flex-col relative border-4 border-gray-800">
     
-    <header class="bg-teal-600 text-white p-4 pt-8 sm:pt-4 flex justify-between items-center z-10 shadow-md">
-      <div>
-        <h1 class="text-xl font-bold tracking-wider">LipCoach AR</h1>
-        <p class="text-xs text-teal-100">สวัสดี, เจมส์</p>
-      </div>
-      <div class="flex items-center gap-2 bg-teal-700 px-3 py-1 rounded-full">
-        <span class="text-xs">🔥 5 วัน</span>
-      </div>
+    <header class="bg-teal-600 text-white p-4 shadow-md">
+      <h1 class="text-xl font-bold">LipCoach AR</h1>
+      <p class="text-xs text-teal-100">สวัสดี, คุณ (เวอร์ชันอัจฉริยะด้วย AI)</p>
     </header>
 
-    <main class="flex-1 overflow-y-auto bg-slate-50 pb-20 p-4 space-y-6">
-      <div class="bg-gradient-to-r from-teal-500 to-emerald-500 rounded-2xl p-5 text-white shadow-lg">
-        <div class="flex justify-between items-center mb-4">
-          <h2 class="text-lg font-semibold">ความคืบหน้าของคุณ</h2>
-          <span class="text-xl">🏆</span>
+    <main class="flex-1 overflow-y-auto p-4" id="main-content">
+      <!-- หน้าแรก -->
+      <div id="page-home" class="page active space-y-4">
+        <div class="bg-teal-500 p-6 rounded-2xl text-white text-center">
+          <h2 class="text-2xl font-bold">พร้อมฝึกหรือยัง?</h2>
+          <p class="mt-2">เลือกโหมดการฝึกของคุณได้เลย</p>
         </div>
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <p class="text-sm opacity-80">คะแนนรวม</p>
-            <p class="text-2xl font-bold">1250</p>
-          </div>
-          <div>
-            <p class="text-sm opacity-80">คำที่เรียนรู้แล้ว</p>
-            <p class="text-2xl font-bold">42</p>
-          </div>
-        </div>
-      </div>
-
-      <div>
-        <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">⭐ ภารกิจประจำวัน</h3>
-        <div class="bg-white rounded-xl p-4 shadow-sm border border-gray-100 space-y-3">
-          <div class="flex justify-between items-center">
-            <div class="flex items-center gap-3">
-              <div class="bg-blue-100 p-2 rounded-full text-blue-600 text-sm">🎮</div>
-              <span class="text-sm font-medium text-gray-700">ฝึกอ่านคำศัพท์ให้ถูก 10 คำ</span>
-            </div>
-            <span class="text-xs font-bold text-teal-600 bg-teal-50 px-2 py-1 rounded">5/10</span>
-          </div>
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div class="bg-teal-500 h-2 rounded-full" style="width: 50%;"></div>
-          </div>
+        <button onclick="showPage('page-practice')" class="w-full bg-teal-600 text-white py-4 rounded-xl font-bold hover:bg-teal-700">▶️ เริ่มฝึกเลย</button>
+        
+        <!-- ฟีเจอร์ใหม่: Gemini API Integration -->
+        <div class="mt-6 p-4 border-2 border-dashed border-teal-300 rounded-2xl bg-teal-50">
+          <h3 class="font-bold text-teal-800 mb-2">✨ ฟีเจอร์ AI อัจฉริยะ</h3>
+          <p class="text-xs text-teal-600 mb-4">ให้ Gemini ช่วยสร้างสถานการณ์ฝึกฝนแบบเฉพาะตัวสำหรับคุณ</p>
+          <button onclick="generateScenarioWithGemini()" class="w-full bg-indigo-600 text-white py-3 rounded-lg font-bold hover:bg-indigo-700 transition-all flex items-center justify-center gap-2">
+            ✨ ให้ AI สร้างสถานการณ์ฝึก
+          </button>
+          <p id="ai-result" class="text-sm text-gray-700 mt-4 font-medium italic"></p>
         </div>
       </div>
 
-      <div class="bg-teal-600 text-white font-bold py-4 rounded-xl shadow-lg text-center cursor-pointer">
-        ▶️ เริ่มฝึกอ่านริมฝีปากเลย
+      <!-- หน้าฝึกฝน -->
+      <div id="page-practice" class="page space-y-4">
+        <div id="practice-area" class="bg-black h-64 rounded-2xl flex items-center justify-center text-white text-center p-4">
+          <div>
+            <div class="text-4xl mb-2">📷</div>
+            <p>ระบบกำลังจำลอง AR...</p>
+            <p id="word-display" class="text-2xl font-bold mt-4 text-teal-400">คำที่ต้องพูด: "สวัสดี"</p>
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <button onclick="checkAnswer(true)" class="bg-green-500 text-white py-3 rounded-lg font-bold">✅ พูดถูก</button>
+          <button onclick="checkAnswer(false)" class="bg-red-500 text-white py-3 rounded-lg font-bold">❌ พูดผิด</button>
+        </div>
       </div>
     </main>
 
-    <nav class="absolute bottom-0 w-full bg-white border-t border-gray-200 flex justify-around py-3 px-2 z-20">
-      <button class="flex flex-col items-center justify-center w-16 h-12 text-teal-600">
-        <span class="text-lg">🏠</span>
-        <span class="text-[10px] font-bold mt-1">หน้าแรก</span>
-      </button>
-      <button class="flex flex-col items-center justify-center w-16 h-12 text-gray-400">
-        <span class="text-lg">📷</span>
-        <span class="text-[10px] mt-1">ฝึก AR</span>
-      </button>
-      <button class="flex flex-col items-center justify-center w-16 h-12 text-gray-400">
-        <span class="text-lg">📍</span>
-        <span class="text-[10px] mt-1">สถานการณ์</span>
-      </button>
-      <button class="flex flex-col items-center justify-center w-16 h-12 text-gray-400">
-        <span class="text-lg">📊</span>
-        <span class="text-[10px] mt-1">ผลลัพธ์</span>
-      </button>
+    <!-- Nav -->
+    <nav class="border-t flex justify-around py-3 bg-white">
+      <button onclick="showPage('page-home')" class="text-teal-600 font-bold">🏠 หน้าแรก</button>
+      <button onclick="showPage('page-practice')" class="text-gray-500">📷 ฝึก AR</button>
     </nav>
   </div>
 
+  <script>
+    const apiKey = ""; // ใส่ API Key ของคุณที่นี่
+
+    function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      document.getElementById(pageId).classList.add('active');
+    }
+
+    async function generateScenarioWithGemini() {
+      const resultArea = document.getElementById('ai-result');
+      resultArea.innerText = "กำลังให้ AI คิดสถานการณ์ให้... รอสักครู่ครับ ✨";
+      
+      try {
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: "ช่วยคิดสถานการณ์ในชีวิตประจำวันสั้นๆ ที่น่าสนใจสำหรับการฝึกอ่านปาก 1 สถานการณ์ พร้อมระบุคำสำคัญที่ใช้ฝึก 3 คำ" }] }]
+          })
+        });
+
+        const data = await response.json();
+        const aiText = data.candidates[0].content.parts[0].text;
+        resultArea.innerText = aiText;
+      } catch (error) {
+        resultArea.innerText = "ขออภัยครับ ฟีเจอร์ AI กำลังปรับปรุง หรือกรุณาตรวจสอบ API Key อีกครั้ง";
+      }
+    }
+
+    function checkAnswer(isCorrect) {
+      if(isCorrect) {
+        alert("ยอดเยี่ยม! คุณพูดถูกต้อง");
+      } else {
+        alert("ลองใหม่อีกครั้งนะครับ คุณทำได้!");
+      }
+    }
+  </script>
 </body>
 </html>
