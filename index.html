@@ -1,105 +1,132 @@
-import React, { useState, useEffect } from 'react';
-import { Target, Brain, Gamepad2, Award, BarChart2, ChevronRight, Play, Mic, UserPlus } from 'lucide-react';
-
-export default function App() {
-  const [view, setView] = useState('dashboard');
-  const [score, setScore] = useState(0);
-  const [currentChallenge, setCurrentChallenge] = useState(0);
-  const [selectedScenario, setSelectedScenario] = useState(null);
-
-  const scenarios = [
-    { id: 'cafe', title: 'ร้านกาแฟ', icon: '☕' },
-    { id: 'hospital', title: 'โรงพยาบาล', icon: '🏥' },
-    { id: 'interview', title: 'สัมภาษณ์งาน', icon: '👔' },
-    { id: 'market', title: 'ตลาด/ร้านค้า', icon: '🛒' }
-  ];
-
-  const challenges = [
-    { question: "ขอลาเต้ร้อน 1 แก้วครับ", options: ["ขอลาเต้ร้อน 1 แก้ว", "ขออเมริกาโน่เย็น", "ขอโกโก้ร้อน"] },
-    { question: "วันนี้มีโปรโมชั่นไหมครับ", options: ["มีโปรโมชั่นไหม", "เปิดกี่โมง", "ร้านอยู่ที่ไหน"] },
-    { question: "ผมเจ็บคอมา 3 วันแล้ว", options: ["ผมเจ็บคอ", "ผมปวดหัว", "ผมปวดท้อง"] }
-  ];
-
-  const handleSelectScenario = (s) => {
-    setSelectedScenario(s);
-    setView('game');
-  };
-
-  const handleAnswer = (isCorrect) => {
-    if (isCorrect) setScore(prev => prev + 100);
-    if (currentChallenge < challenges.length - 1) {
-      setCurrentChallenge(prev => prev + 1);
-    } else {
-      setView('report');
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LipCoach AR</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;700;800&display=swap');
+    body {
+      font-family: 'Prompt', sans-serif;
     }
-  };
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
 
-  return (
-    <div className="min-h-screen bg-slate-50 text-slate-900 font-sans p-4 md:p-6">
-      {/* Header */}
-      <header className="max-w-3xl mx-auto mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-extrabold text-blue-600">LipCoach AR</h1>
-          <p className="text-slate-500 text-sm">ฝึกอ่านริมฝีปากเพื่อการสื่อสารที่มั่นใจ</p>
-        </div>
-        <div className="bg-white p-2 rounded-full shadow-md">
-          <Award className="text-amber-500" />
-        </div>
-      </header>
+  <div id="root"></div>
 
-      <main className="max-w-3xl mx-auto">
-        {view === 'dashboard' && (
-          <div className="space-y-6">
-            <div className="grid grid-cols-2 gap-4">
-              <button onClick={() => setView('game')} className="bg-blue-600 text-white p-6 rounded-2xl flex flex-col items-center shadow-lg hover:bg-blue-700 transition">
-                <Play size={32} />
-                <span className="mt-2 font-bold">ฝึกด่วน</span>
-              </button>
-              <button onClick={() => setView('duo')} className="bg-purple-600 text-white p-6 rounded-2xl flex flex-col items-center shadow-lg hover:bg-purple-700 transition">
-                <UserPlus size={32} />
-                <span className="mt-2 font-bold">Duo Mode</span>
-              </button>
+  <script type="text/babel">
+    function App() {
+      const [view, setView] = React.useState('dashboard');
+      const [score, setScore] = React.useState(0);
+      const [currentChallenge, setCurrentChallenge] = React.useState(0);
+      const [selectedScenario, setSelectedScenario] = React.useState(null);
+
+      const scenarios = [
+        { id: 'cafe', title: 'ร้านกาแฟ', icon: '☕' },
+        { id: 'hospital', title: 'โรงพยาบาล', icon: '🏥' },
+        { id: 'interview', title: 'สัมภาษณ์งาน', icon: '👔' },
+        { id: 'market', title: 'ตลาด/ร้านค้า', icon: '🛒' }
+      ];
+
+      const challenges = [
+        { question: "ขอลาเต้ร้อน 1 แก้วครับ", options: ["ขอลาเต้ร้อน 1 แก้ว", "ขออเมริกาโน่เย็น", "ขอโกโก้ร้อน"] },
+        { question: "วันนี้มีโปรโมชั่นไหมครับ", options: ["มีโปรโมชั่นไหม", "เปิดกี่โมง", "ร้านอยู่ที่ไหน"] },
+        { question: "ผมเจ็บคอมา 3 วันแล้ว", options: ["ผมเจ็บคอ", "ผมปวดหัว", "ผมปวดท้อง"] }
+      ];
+
+      const handleSelectScenario = (s) => {
+        setSelectedScenario(s);
+        setView('game');
+      };
+
+      const handleAnswer = (isCorrect) => {
+        if (isCorrect) setScore(prev => prev + 100);
+        if (currentChallenge < challenges.length - 1) {
+          setCurrentChallenge(prev => prev + 1);
+        } else {
+          setView('report');
+        }
+      };
+
+      return (
+        <div className="min-h-screen p-4 md:p-6">
+          {/* Header */}
+          <header className="max-w-3xl mx-auto mb-8 flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-extrabold text-blue-600">LipCoach AR</h1>
+              <p className="text-slate-500 text-sm">ฝึกอ่านริมฝีปากเพื่อการสื่อสารที่มั่นใจ</p>
             </div>
+            <div className="bg-white p-3 rounded-full shadow-md text-amber-500 font-bold">
+              🏆
+            </div>
+          </header>
 
-            <h2 className="text-xl font-bold mt-4">สถานการณ์จำลอง</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {scenarios.map(s => (
-                <button key={s.id} onClick={() => handleSelectScenario(s)} className="bg-white p-6 rounded-xl border border-slate-200 text-left hover:shadow-md transition">
-                  <span className="text-3xl mb-2 block">{s.icon}</span>
-                  <h3 className="font-bold">{s.title}</h3>
+          <main className="max-w-3xl mx-auto">
+            {view === 'dashboard' && (
+              <div className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <button onClick={() => setView('game')} className="bg-blue-600 text-white p-6 rounded-2xl flex flex-col items-center shadow-lg hover:bg-blue-700 transition">
+                    <span className="text-2xl mb-1">▶</span>
+                    <span className="mt-2 font-bold">ฝึกด่วน</span>
+                  </button>
+                  <button onClick={() => setView('duo')} className="bg-purple-600 text-white p-6 rounded-2xl flex flex-col items-center shadow-lg hover:bg-purple-700 transition">
+                    <span className="text-2xl mb-1">➕</span>
+                    <span className="mt-2 font-bold">Duo Mode</span>
+                  </button>
+                </div>
+
+                <h2 className="text-xl font-bold mt-4">สถานการณ์จำลอง</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {scenarios.map(s => (
+                    <button key={s.id} onClick={() => handleSelectScenario(s)} className="bg-white p-6 rounded-xl border border-slate-200 text-left hover:shadow-md transition">
+                      <span className="text-3xl mb-2 block">{s.icon}</span>
+                      <h3 className="font-bold">{s.title}</h3>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {view === 'game' && (
+              <div className="bg-white p-6 rounded-3xl shadow-xl">
+                <div className="w-full h-64 bg-slate-800 rounded-2xl flex items-center justify-center text-white mb-6 animate-pulse">
+                  [AR Camera View - Lip Tracking Active]
+                </div>
+                <h3 className="text-lg font-bold mb-4">อ่านริมฝีปากและเลือกคำตอบ:</h3>
+                <div className="space-y-3">
+                  {challenges[currentChallenge].options.map((opt, i) => (
+                    <button key={i} onClick={() => handleAnswer(i === 0)} className="w-full p-4 border border-blue-200 rounded-xl hover:bg-blue-50 transition font-medium text-left">
+                      {opt}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {view === 'report' && (
+              <div className="bg-white p-8 rounded-3xl text-center shadow-xl">
+                <div className="text-5xl mb-4">📊</div>
+                <h2 className="text-2xl font-bold">สรุปผลการฝึก</h2>
+                <p className="text-5xl font-black text-blue-600 my-6">{score} คะแนน</p>
+                <button onClick={() => { setView('dashboard'); setScore(0); setCurrentChallenge(0); }} className="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-slate-800 transition">
+                  กลับหน้าหลัก
                 </button>
-              ))}
-            </div>
-          </div>
-        )}
+              </div>
+            )}
+          </main>
+        </div>
+      );
+    }
 
-        {view === 'game' && (
-          <div className="bg-white p-6 rounded-3xl shadow-xl">
-            <div className="w-full h-64 bg-slate-800 rounded-2xl flex items-center justify-center text-white mb-6 animate-pulse">
-              [AR Camera View - Lip Tracking Active]
-            </div>
-            <h3 className="text-lg font-bold mb-4">อ่านริมฝีปากและเลือกคำตอบ:</h3>
-            <div className="space-y-3">
-              {challenges[currentChallenge].options.map((opt, i) => (
-                <button key={i} onClick={() => handleAnswer(i === 0)} className="w-full p-4 border border-blue-200 rounded-xl hover:bg-blue-50 transition font-medium text-left">
-                  {opt}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<App />);
+  </script>
 
-        {view === 'report' && (
-          <div className="bg-white p-8 rounded-3xl text-center shadow-xl">
-            <BarChart2 size={64} className="mx-auto text-green-500 mb-4" />
-            <h2 className="text-2xl font-bold">สรุปผลการฝึก</h2>
-            <p className="text-5xl font-black text-blue-600 my-6">{score} คะแนน</p>
-            <button onClick={() => { setView('dashboard'); setScore(0); setCurrentChallenge(0); }} className="bg-slate-900 text-white px-8 py-3 rounded-full font-bold hover:bg-slate-800 transition">
-              กลับหน้าหลัก
-            </button>
-          </div>
-        )}
-      </main>
-    </div>
-  );
-}
+</body>
+</html>
